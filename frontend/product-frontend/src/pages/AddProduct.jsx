@@ -13,11 +13,19 @@ function AddProduct() {
     e.preventDefault();
 
     try {
-      await api.post("/", {
+      await api.post(
+      "/",
+      {
         name,
         price,
         category,
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
 
       alert("✅ Product Added Successfully");
 

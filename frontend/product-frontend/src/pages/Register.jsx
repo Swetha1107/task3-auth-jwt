@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Login() {
+function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,25 +13,23 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+      await axios.post(
+        "http://localhost:5000/api/auth/signup",
         {
+          name,
           email,
           password,
         }
       );
 
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
-
-      alert("Login Successful");
-      navigate("/dashboard");
+      alert("Registration Successful");
+      navigate("/login");
     } catch (error) {
-      console.log(error);
-      alert(error.response?.data?.message || error.message);
+    console.log(error);
+    console.log(error.response?.data);
+    alert(error.response?.data?.message || error.message);
     }
+    
   };
 
   return (
@@ -60,50 +59,60 @@ function Login() {
             marginBottom: "25px",
           }}
         >
-          Login
+          Register
         </h2>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: "15px" }}>
-            <label style={{ color: "white", fontSize: "13px" }}>
+            <label style={{ color: "white" }}>
+              Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px",
+                marginTop: "6px",
+                borderRadius: "6px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ color: "white" }}>
               Email
             </label>
             <input
               type="email"
+              placeholder="Enter Email"
               value={email}
-              placeholder="Enter email"
               onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",
                 padding: "12px",
                 marginTop: "6px",
                 borderRadius: "6px",
-                border: "1px solid #333",
-                backgroundColor: "#000",
-                color: "white",
-                outline: "none",
               }}
             />
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ color: "white", fontSize: "13px" }}>
+            <label style={{ color: "white" }}>
               Password
             </label>
             <input
               type="password"
+              placeholder="Enter Password"
               value={password}
-              placeholder="Enter password"
               onChange={(e) => setPassword(e.target.value)}
               style={{
                 width: "100%",
                 padding: "12px",
                 marginTop: "6px",
                 borderRadius: "6px",
-                border: "1px solid #333",
-                backgroundColor: "#000",
-                color: "white",
-                outline: "none",
               }}
             />
           </div>
@@ -117,22 +126,19 @@ function Login() {
               color: "white",
               border: "none",
               borderRadius: "6px",
-              fontWeight: "bold",
               cursor: "pointer",
-              transition: "0.3s",
             }}
-            onMouseOver={(e) => {
-              e.target.style.backgroundColor = "blue";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.backgroundColor = "red";
-            }}
+            onMouseOver={(e) =>
+              (e.target.style.backgroundColor = "blue")
+            }
+            onMouseOut={(e) =>
+              (e.target.style.backgroundColor = "red")
+            }
           >
-            Login
+            Register
           </button>
         </form>
 
-        {/* Added Register Link */}
         <p
           style={{
             color: "white",
@@ -140,12 +146,12 @@ function Login() {
             marginTop: "15px",
           }}
         >
-          Don't have an account?{" "}
-          <a href="/register">Register</a>
+          Already have an account?{" "}
+          <a href="/login">Login</a>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Register;
